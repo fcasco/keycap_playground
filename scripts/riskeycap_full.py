@@ -49,8 +49,8 @@ color_init()
 from keycap import Keycap
 
 # Change these to the correct paths in your environment:
-OPENSCAD_PATH = Path("/home/riskable/downloads/OpenSCAD-2022.12.06.ai12948-x86_64.AppImage")
-COLORSCAD_PATH = Path("/home/riskable/downloads/colorscad/colorscad.sh")
+OPENSCAD_PATH = Path("/usr/bin/openscad")
+COLORSCAD_PATH = None
 
 KEY_UNIT = 19.05 # Square that makes up the entire space of a key
 BETWEENSPACE = 0.8 # Space between keycaps
@@ -99,8 +99,7 @@ async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str) -> 
         return output
 
 
-@asyncio.coroutine
-def run_all_commands(command_list: Sequence[str] = COMMANDS) -> None:
+async def run_all_commands(command_list: Sequence[str] = COMMANDS) -> None:
     """
     Run all commands in a list
     :param command_list: List of commands to run.
@@ -108,12 +107,11 @@ def run_all_commands(command_list: Sequence[str] = COMMANDS) -> None:
     loop = asyncio.get_event_loop()
     fs = [run_command_on_loop(loop, command) for command in command_list]
     for f in asyncio.as_completed(fs):
-        result = yield from f
+        result = await f
         ensure_future(process_result(result))
 
 
-@asyncio.coroutine
-def process_result(result: Any):
+async def process_result(result: Any):
     """
     Do something useful with result of the commands
     """

@@ -138,7 +138,7 @@ class Keycap(object):
             keycap_playground_path=Path("./keycap_playground.scad"),
             file_type="3mf",
             openscad_path=Path("/usr/bin/openscad"),
-            colorscad_path=Path(""),
+            colorscad_path=None,
             output_path=Path(".")):
         self.name = name
         self.output_path = output_path
@@ -209,8 +209,9 @@ class Keycap(object):
         self.keycap_playground_path = keycap_playground_path
         self.colorscad_path = colorscad_path
         self.openscad_path = openscad_path
-        # This speeds things up considerably:
-        self.openscad_args = "--enable=fast-csg"
+        # This speeds things up considerably but only works in newer OpenSCAD versions:
+        # self.openscad_args = "--enable=fast-csg"
+        self.openscad_args = ""
 
     # NOTE: This doesn't seem to work right for unknown reasons so you'll want
     #       to generate the quote keycap by hand on the command line.
@@ -260,7 +261,7 @@ class Keycap(object):
         )
         last_part = self.keycap_playground_path
         render = self.render
-        if str(self.colorscad_path): # Use colorscad.sh
+        if self.colorscad_path and os.path.exists(self.colorscad_path): # Use colorscad.sh
             # Check to make sure it actually exists
             if os.path.exists(self.colorscad_path):
                 # Add openscad to the $PATH variable so colorscad can find it
