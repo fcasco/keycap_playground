@@ -14,8 +14,9 @@ import os
 import json
 from pathlib import Path
 
-KEY_UNIT = 19.05 # Square that makes up the entire space of a key
-BETWEENSPACE = 0.8 # Space between keycaps
+KEY_UNIT = 19.05  # Square that makes up the entire space of a key
+BETWEENSPACE = 0.8  # Space between keycaps
+
 
 class OpenSCADException(Exception):
     """
@@ -23,11 +24,13 @@ class OpenSCADException(Exception):
     """
     pass
 
+
 class ColorscadException(Exception):
     """
     Raised when colorscad.sh can't be found or it's not working correctly.
     """
     pass
+
 
 class Keycap(object):
     """
@@ -79,18 +82,18 @@ class Keycap(object):
         from subprocess import getstatusoutput
         retcode, output = getstatusoutput(str(tilde))
     """
-    def __init__(self,
+    def __init__(self,  # noqa: C901
             name=None,
-            render=["keycap", "stem"],
+            render=None,
             key_profile="riskeycap",
-            key_length=KEY_UNIT-BETWEENSPACE,
-            key_width=KEY_UNIT-BETWEENSPACE,
-            key_rotation=[0,0,0],
+            key_length=KEY_UNIT - BETWEENSPACE,
+            key_width=KEY_UNIT - BETWEENSPACE,
+            key_rotation=None,
             key_height=8,
             key_top_difference=5,
             key_top_x=0,
             key_top_y=0,
-            wall_thickness=0.45*2.5,
+            wall_thickness=0.45 * 2.5,
             dish_thickness=1.0,
             dish_type="cylinder",
             dish_x=0,
@@ -118,28 +121,55 @@ class Keycap(object):
             stem_inside_tolerance=0.2,
             stem_outside_tolerance_x=0.05,
             stem_outside_tolerance_y=0.05,
-            stem_side_supports=[0,0,0,0],
-            stem_locations=[[0,0,0]],
+            stem_side_supports=None,
+            stem_locations=None,
             stem_sides_wall_thickness=0.65,
             stem_snap_fit=False,
             stem_walls_inset=1.05,
             stem_walls_tolerance=0.2,
-            homing_dot_length=0, # 0 means no "dot"
+            homing_dot_length=0,  # 0 means no "dot"
             homing_dot_width=1,
             homing_dot_x=0,
             homing_dot_y=-2,
-            homing_dot_z=-0.35, # How far it sticks out
-            legends=[""],
-            fonts=[], font_sizes=[],
-            trans=[[0,0,0]], trans2=[[0,0,0]],
-            rotation=[[0,0,0]], rotation2=[[0,0,0]],
-            scale=[[1,1,1]], underset=[[0,0,0]],
+            homing_dot_z=-0.35,  # How far it sticks out
+            legends=None,
+            fonts=None, font_sizes=None,
+            trans=None, trans2=None,
+            rotation=None, rotation2=None,
+            scale=None, underset=None,
             legend_carved=False,
             keycap_playground_path=Path("./keycap_playground.scad"),
             file_type="3mf",
             openscad_path=Path("/usr/bin/openscad"),
             colorscad_path=None,
             output_path=Path(".")):
+        if render is None:
+            render = ["keycap", "stem"]
+        if key_rotation is None:
+            key_rotation = [0, 0, 0]
+        if stem_side_supports is None:
+            stem_side_supports = [0, 0, 0, 0]
+        if stem_locations is None:
+            stem_locations = [[0, 0, 0]]
+        if legends is None:
+            legends = [""]
+        if fonts is None:
+            fonts = []
+        if font_sizes is None:
+            font_sizes = []
+        if trans is None:
+            trans = [[0, 0, 0]]
+        if trans2 is None:
+            trans2 = [[0, 0, 0]]
+        if rotation is None:
+            rotation = [[0, 0, 0]]
+        if rotation2 is None:
+            rotation2 = [[0, 0, 0]]
+        if scale is None:
+            scale = [[1, 1, 1]]
+        if underset is None:
+            underset = [[0, 0, 0]]
+
         self.name = name
         self.output_path = output_path
         self.render = render
@@ -228,14 +258,14 @@ class Keycap(object):
         """
         properly_escaped_quote = r'''"'"'"'"'''
         out = "["
-        for i, legend in enumerate(legends):
+        for _i, legend in enumerate(legends):
             if legend == "'":
                 out += properly_escaped_quote + ","
             elif legend == '"':
                 out += r'"\""'
             else:
                 out += json.dumps(legend) + ","
-        out = out.rstrip(',') # Get rid of trailing comma
+        out = out.rstrip(",")  # Get rid of trailing comma
         return out + "]"
 
     def __repr__(self):
@@ -261,20 +291,20 @@ class Keycap(object):
         )
         last_part = self.keycap_playground_path
         render = self.render
-        if self.colorscad_path and os.path.exists(self.colorscad_path): # Use colorscad.sh
+        if self.colorscad_path and os.path.exists(self.colorscad_path):  # Use colorscad.sh
             # Check to make sure it actually exists
             if os.path.exists(self.colorscad_path):
                 # Add openscad to the $PATH variable so colorscad can find it
                 os.environ["PATH"] += f"{self.openscad_path.parent}"
                 first_part = (
-                    #f'PATH="${self.openscad_path.parent}:$PATH"; '
+                    # f'PATH="${self.openscad_path.parent}:$PATH"; '
                     f"{self.colorscad_path} -i {self.keycap_playground_path} "
                     f"-o '{self.output_path}'/'{self.name}.{self.file_type}' "
                     f"-p '{self.openscad_path}' "
                     f"-- {self.openscad_args} -D $'"
                 )
                 last_part = ""
-                #render = ["keycap", "stem", "legends"]
+                # render = ["keycap", "stem", "legends"]
                 render.append("legends")
         # NOTE: Since OpenSCAD requires double quotes I'm using the json module
         #       to encode things that need it:
@@ -282,8 +312,8 @@ class Keycap(object):
             f"{first_part}"
             f"RENDER={json.dumps(render)}; "
             f"KEY_PROFILE={json.dumps(self.key_profile)}; "
-            f"KEY_LENGTH={round(self.key_length,2)}; "
-            f"KEY_WIDTH={round(self.key_width,2)}; "
+            f"KEY_LENGTH={round(self.key_length, 2)}; "
+            f"KEY_WIDTH={round(self.key_width, 2)}; "
             f"KEY_TOP_DIFFERENCE={self.key_top_difference}; "
             f"KEY_ROTATION={self.key_rotation}; "
             f"KEY_HEIGHT={self.key_height}; "
@@ -346,7 +376,7 @@ class Keycap(object):
         """
         Override anything passed in via kwargs
         """
-        #print(f"postinit kwargs: {kwargs}")
+        # print(f"postinit kwargs: {kwargs}")
         for k, v in kwargs.items():
-            #print(f"Updating: {k}: {v}")
+            # print(f"Updating: {k}: {v}")
             self.__dict__.update({k: v})
