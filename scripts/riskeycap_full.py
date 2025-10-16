@@ -59,9 +59,7 @@ FILE_TYPE = "3mf" # 3mf or stl
 # BEGIN Async stuff
 # Mostly copied from https://gist.github.com/anti1869/e02c4212ce16286ea40f
 COMMANDS = []
-MAX_RUNNERS = 8
-
-SEM = asyncio.Semaphore(MAX_RUNNERS)
+MAX_RUNNERS = 2
 
 def run_command(cmd: str) -> str:
     """
@@ -986,6 +984,9 @@ if __name__ == "__main__":
     parser.add_argument('--keycaps',
         required=False, action='store_true',
         help='If True, prints out the names of all keycaps we can render.')
+    parser.add_argument('--max-processes', '-j',
+        required=False, type=int, default=2,
+        help='Maximum number of parallel OpenSCAD processes to run simultaneously (default: 2)')
     parser.add_argument('names',
         nargs='*', metavar="name",
         help='Optional name of specific keycap you wish to render')
@@ -1005,6 +1006,9 @@ if __name__ == "__main__":
               + Style.RESET_ALL)
         os.mkdir(args.out)
     print(Style.BRIGHT + f"Outputting to: {args.out}" + Style.RESET_ALL)
+    
+    # Initialize semaphore for controlling parallel processes
+    SEM = asyncio.Semaphore(args.max_processes)
     if args.names: # Just render the specified keycaps
         matched = False
         for name in args.names:

@@ -918,6 +918,9 @@ if __name__ == "__main__":
     parser.add_argument('--keycaps',
         required=False, action='store_true',
         help='If True, prints out the names of all keycaps we can render.')
+    parser.add_argument('--max-processes', '-j',
+        required=False, type=int, default=2,
+        help='Maximum number of parallel OpenSCAD processes to run simultaneously (default: 2)')
     parser.add_argument('names',
         nargs='*', metavar="name",
         help='Optional name of specific keycap you wish to render')
