@@ -59,15 +59,15 @@ This repository contains modules for generating keycaps, stems, legends, and uti
 #### Parameter Relationships
 ```openscad
 // Key dimensions
-KEY_UNIT = 19.05;  // Standard keyboard unit
-BETWEENSPACE = 0.8; // Gap between keycaps
+KEY_UNIT = 19.05;                       // Standard keyboard unit
+BETWEENSPACE = 0.8;                     // Gap between keycaps
 KEY_LENGTH = (KEY_UNIT*1-BETWEENSPACE); // Standard 1U key
 KEY_WIDTH = (KEY_UNIT*1-BETWEENSPACE);  // Standard 1U key
 
 // Wall and dish relationships
-WALL_THICKNESS = 0.45*2.25;  // ~1mm wall
-DISH_THICKNESS = 1.0;        // At least 1mm for legend strength
-UNIFORM_WALL_THICKNESS = true; // For consistent wall thickness matching dish
+WALL_THICKNESS = 0.45*2.25;             // ~1mm wall
+DISH_THICKNESS = 1.0;                   // At least 1mm for legend strength
+UNIFORM_WALL_THICKNESS = true;          // For consistent wall thickness matching dish
 ```
 
 #### Dish Configuration

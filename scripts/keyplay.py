@@ -5,7 +5,7 @@ Best way to use this script is from within the `keycap_playground` directory.
 
 .. bash::
 
-    $ ./scripts/riskeycap_full.py --out /tmp/output_dir
+    $ ./scripts/keyplay.py --out /tmp/output_dir
 
 .. note::
 
@@ -27,8 +27,6 @@ Fonts used by this script:
  * DejaVu Sans:style=Bold
  * Noto
 """
-
-# stdlib imports
 import argparse
 import asyncio
 import os
@@ -39,11 +37,10 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from typing import Any, Sequence
-# 3rd party stuff
+
 from colorama import Style
 from colorama import init as color_init
 
-# Our own stuff
 from keycap import Keycap
 
 color_init()
@@ -56,8 +53,6 @@ KEY_UNIT = 19.05  # Square that makes up the entire space of a key
 BETWEENSPACE = 0.8  # Space between keycaps
 FILE_TYPE = "3mf"  # 3mf or stl
 
-# BEGIN Async stuff
-# Mostly copied from https://gist.github.com/anti1869/e02c4212ce16286ea40f
 COMMANDS = []
 MAX_RUNNERS = 2
 
@@ -76,14 +71,12 @@ def run_command(cmd: str) -> str:
             shell=True,
             cwd=os.getcwd(),
         )
-
     except subprocess.CalledProcessError as e:
         output = e.output
 
     return output
 
 
-# @asyncio.coroutine
 async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str) -> bool:
     """
     Run test for one particular feature, check its result and return report.
@@ -116,10 +109,8 @@ async def process_result(result: Any):
     """
     print(result)
 
-# END Async stuff
 
-
-class riskeycap_base(Keycap):
+class RiskeycapBase(Keycap):
     """
     Base keycap definitions for the riskeycap profile + our personal prefs.
     """
@@ -127,8 +118,8 @@ class riskeycap_base(Keycap):
         self.openscad_path = OPENSCAD_PATH
         self.colorscad_path = COLORSCAD_PATH
         super().__init__(**kwargs,
-            openscad_path=self.openscad_path,
-            colorscad_path=self.colorscad_path)
+                         openscad_path=self.openscad_path,
+                         colorscad_path=self.colorscad_path)
         self.render = ["keycap", "stem"]
         self.file_type = FILE_TYPE
         self.key_profile = "riskeycap"
@@ -196,7 +187,7 @@ class riskeycap_base(Keycap):
         self.postinit(**kwargs)
 
 
-class riskeycap_alphas(riskeycap_base):
+class riskeycap_alphas(RiskeycapBase):
     """
     Basic alphanumeric characters (centered, big legend)
     """
@@ -228,7 +219,7 @@ class riskeycap_alphas_homing_dot(riskeycap_alphas):
         self.homing_dot_z = -0.45
 
 
-class riskeycap_numrow(riskeycap_base):
+class riskeycap_numrow(RiskeycapBase):
     """
     Number row numbers are slightly different
     """
@@ -362,7 +353,7 @@ class riskeycap_dash(riskeycap_numrow):
         self.scale[2] = [0.8, 1, 3]  # Also needs to be squished a bit
 
 
-class riskeycap_double_legends(riskeycap_base):
+class riskeycap_double_legends(RiskeycapBase):
     """
     For regular keys that have two legends... ,./;'[]
     """
@@ -711,7 +702,7 @@ class riskeycap_7U(riskeycap_alphas):
 
 KEYCAPS = [
     # Basic 1U keys
-    riskeycap_base(name="1U_blank"),
+    RiskeycapBase(name="1U_blank"),
     riskeycap_tilde(name="tilde", legends=["`", "", "~"]),
     riskeycap_numrow(legends=["1", "", "!"]),
     riskeycap_2(legends=["2", "", "@"]),
