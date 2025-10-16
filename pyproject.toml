@@ -11,3 +11,8 @@ quote-style = "double"
 extend-select = ["E302"]
 preview = true
 select = ["A", "B", "C", "E", "F", "Q", "W"]
+
+[dependency-groups]
+dev = [
+    "sca2d>=0.3.1",
+]
