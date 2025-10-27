@@ -12,7 +12,7 @@ class TestKeycap(unittest.TestCase):
         # Test default values
         self.assertEqual(keycap.key_profile, "riskeycap")
         self.assertEqual(keycap.key_height, 8)
-        self.assertEqual(keycap.wall_thickness, 0.45 * 2.5)
+        self.assertEqual(keycap.wall_thickness, 1.125)
         self.assertEqual(keycap.uniform_wall_thickness, True)
         self.assertEqual(keycap.legends, [""])
         self.assertEqual(keycap.name, "test_keycap")
@@ -24,7 +24,7 @@ class TestKeycap(unittest.TestCase):
             key_profile="dsa",
             key_height=9,
             wall_thickness=2.0,
-            legends=["A", "B"]
+            legends=["A", "B"],
         )
 
         self.assertEqual(keycap.key_profile, "dsa")
@@ -54,10 +54,7 @@ class TestKeycap(unittest.TestCase):
     def test_openscad_command_generation(self):
         """Test that OpenSCAD command string is generated correctly"""
         keycap = Keycap(
-            name="test",
-            key_profile="riskeycap",
-            legends=["A"],
-            render=["keycap", "stem"]
+            name="test", key_profile="riskeycap", legends=["A"], render=["keycap", "stem"]
         )
 
         command = str(keycap)
@@ -71,7 +68,7 @@ class TestKeycap(unittest.TestCase):
 
         # Test single quote escaping
         result = keycap.quote(["'", "test"])
-        self.assertIn("\"'\"'\"'\"", result)  # Properly escaped single quote
+        self.assertIn('"\'"\'"\'"', result)  # Properly escaped single quote
 
         # Test normal strings
         result = keycap.quote(["A", "B"])
@@ -86,7 +83,7 @@ class TestKeycap(unittest.TestCase):
             key_length=18.25,
             dish_depth=1.0,
             wall_thickness=1.5,
-            legends=["TEST"]
+            legends=["TEST"],
         )
 
         command = str(keycap)
