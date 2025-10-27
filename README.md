@@ -15,11 +15,7 @@ This repository contains modules for generating keycaps, stems, legends, and uti
 - `profiles.scad` - Predefined keycap profiles (DSA, DCS, KAT, Riskeycap, etc.)
 - `utils.scad` - Utility functions and geometric primitives
 - `snap_fit.scad` - Snap-fit stem modules
-- `scripts/` - Python scripts for command-line keycap generation
-  - `keycap.py` - Core Keycap class for generating OpenSCAD commands
-  - `riskeycap_full.py` - Complete set of Riskeycap profile keycaps
-  - `gem_full.py` - Complete set of GEM profile keycaps
-  - `riskeyboard_70.py` - Keycaps for a specific 70% keyboard layout
+- `src/` - Python scripts for command-line keycap generation
 
 ## Key Concepts
 
@@ -200,27 +196,27 @@ The `scripts/` directory contains Python automation tools for batch generating k
 
 ### Command Line Usage
 
-**Important**: Before using the scripts, ensure OpenSCAD is installed and accessible in your PATH (`which openscad` should return a path).
+**Important**: Before using the scripts, ensure OpenSCAD is installed and accessible in your PATH
+(`which openscad` should return a path).
 
-```bash
+```sh
+# Show help
+python -m src --help
+
 # Show all available keycap names
-./scripts/riskeycap_full.py --keycaps
+python -m src --keycaps
 
 # Generate specific keycaps to output directory
-mkdir -p output
-./scripts/riskeycap_full.py --out ./output A B C
+python -m src --out /tmp/keycaps A B C
 
 # Generate all keycaps to output directory (warning: this will take a very long time)
-./scripts/riskeycap_full.py --out ./output
+python -m src --out /tmp/keycaps
 
 # Force regeneration even if files exist
-./scripts/riskeycap_full.py --out ./output --force A B C
+python -m src --out /tmp/keycaps --force A B C
 
 # Generate separate legend files for multi-material printing
-./scripts/riskeycap_full.py --out ./output --legends A B C
-
-# Generate only legend files
-./scripts/riskeycap_full.py --out ./output --legends A B C
+python -m src --out /tmp/keycaps --legends A B C
 ```
 
 ### Custom Keycap Generation
@@ -231,7 +227,7 @@ To create your own keycap set:
 4. Use the command-line interface to generate STLs
 
 ### Asynchronous Processing
-The `riskeycap_full.py` script includes asyncio functionality to run multiple OpenSCAD processes in parallel for faster batch generation.
+The  script includes asyncio functionality to run multiple OpenSCAD processes in parallel for faster batch generation.
 
 ### Legend Positioning via Scripts
 - Use `trans` parameter for legend translation: `[x, y, z]`
