@@ -17,7 +17,4 @@ check: check-python check-config check-scad
 test:
 	python -m unittest discover tests/ -v
 
-test-unit:
-	python -m unittest discover tests/ -v
-
-.PHONY: check check-python check-config check-scad test test-unit
+.PHONY: check check-python check-config check-scad test

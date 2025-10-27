@@ -33,7 +33,10 @@ def main():
     args_parser = make_args_parser()
     args = args_parser.parse_args()
 
-    keyplay.run(args)
+    if args.keycaps:
+        keyplay.print_keycaps()
+    else:
+        keyplay.run(args)
 
 
 if __name__ == "__main__":

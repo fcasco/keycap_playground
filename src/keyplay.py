@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 """
 Generates a whole keyboard's worth of keycaps (and a few extras).
-Best way to use this script is from within the `keycap_playground` directory.
-
-.. bash::
-
-    $ ./scripts/keyplay.py --out /tmp/output_dir
-
-.. note::
-
-    Make sure you add the correct path to colorscad.sh if you want
-    multi-material keycaps!
 
 Fonts used by this script:
 --------------------------
@@ -33,7 +23,6 @@ import logging
 import os
 import pathlib
 import subprocess
-import sys
 from copy import deepcopy
 from typing import Any, Sequence
 
@@ -49,10 +38,6 @@ COLORSCAD_PATH = None
 
 KEY_UNIT = 19.05  # Square that makes up the entire space of a key
 BETWEENSPACE = 0.8  # Space between keycaps
-FILE_TYPE = "3mf"  # 3mf or stl
-
-COMMANDS = []
-MAX_RUNNERS = 2
 
 
 def run_command(cmd: str) -> str:
@@ -100,7 +85,7 @@ async def process_result(result: Any):
     print(result)
 
 
-async def run_all_commands(semaphore, commands: Sequence[str] = COMMANDS) -> None:
+async def run_all_commands(semaphore, commands: Sequence[str]) -> None:
     """
     Run all commands in a list
     :param commands: List of commands to run.
@@ -119,6 +104,8 @@ class RiskeycapBase(Keycap):
     """
     Base keycap definitions for the riskeycap profile + our personal prefs.
     """
+    default_file_type = "3mf"  # 3mf or stl
+
     def __init__(self, **kwargs):
         self.openscad_path = OPENSCAD_PATH
         self.colorscad_path = COLORSCAD_PATH
@@ -128,7 +115,7 @@ class RiskeycapBase(Keycap):
                          colorscad_path=self.colorscad_path)
 
         self.render = ["keycap", "stem"]
-        self.file_type = FILE_TYPE
+        self.file_type = self.default_file_type
         self.key_profile = "riskeycap"
         self.key_rotation = [0, 110.1, -90]
         self.wall_thickness = 0.45 * 2.25
@@ -1022,21 +1009,14 @@ def print_keycaps():
     """
     Prints the names of all keycaps in KEYCAPS.
     """
-    print("Here's all the keycaps we can render:\n")
     keycap_names = ", ".join(a.name for a in KEYCAPS)
-    print(f"{keycap_names}")
+    print(f"Here's all the keycaps we can render:\n{keycap_names}")
 
 
-def run(args):
-    if args.keycaps:
-        print_keycaps()
-        sys.exit(1)
-    if not os.path.exists(args.out):
-        print(f"Output path, '{args.out}' does not exist; making it...")
-        os.mkdir(args.out)
-    print(f"Outputting to: {args.out}")
-
-    semaphore = asyncio.Semaphore(args.max_processes)
+def make_commands(args):
+    """Returns a list of commands to generate the keycaps using OpenSCAD
+    """
+    commands = []
 
     if args.names:
         matched = False
@@ -1054,7 +1034,7 @@ def run(args):
                     if not exists:
                         print(f"Rendering {args.out}/{keycap.name}.{keycap.file_type}...")
                         print(keycap)
-                        COMMANDS.append(str(keycap))
+                        commands.append(str(keycap))
                     if args.legends:
                         keycap.name = f"{keycap.name}_legends"
                         # Change it to .stl since PrusaSlicer doesn't like .3mf
@@ -1066,7 +1046,7 @@ def run(args):
                             continue
                         print(f"Rendering {args.out}/{keycap.name}.{keycap.file_type}...")
                         print(keycap)
-                        COMMANDS.append(str(keycap))
+                        commands.append(str(keycap))
         if not matched:
             print(f"Cound not find a keycap named {name}")
     else:
@@ -1079,7 +1059,7 @@ def run(args):
                     continue
             print(f"Rendering {args.out}/{keycap.name}.{keycap.file_type}...")
             print(keycap)
-            COMMANDS.append(str(keycap))
+            commands.append(str(keycap))
 
         # Next render the legends (for multi-material, non-transparent legends)
         if args.legends:
@@ -1099,7 +1079,15 @@ def run(args):
                         continue
                 print(f"Rendering {args.out}/{legend.name}.{legend.file_type}...")
                 print(legend)
-                COMMANDS.append(str(legend))
+                commands.append(str(legend))
 
+    return commands
+
+
+def run(args):
+    print(f"Outputting to: {args.out}")
+
+    commands = make_commands(args)
+    semaphore = asyncio.Semaphore(args.max_processes)
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(run_all_commands(semaphore=semaphore, commands=COMMANDS))
+    loop.run_until_complete(run_all_commands(semaphore=semaphore, commands=commands))

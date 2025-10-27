@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Contains the Keycap class which makes it easy to script the generation of
 keycaps using the Keycap Playground.
@@ -34,8 +32,8 @@ class ColorscadException(Exception):
 
 class Keycap(object):
     """
-    A convenient abstraction for specifying a keycap's details.  The most useful
-    way to use this class is to subclass it to make your own "base" class
+    A convenient abstraction for specifying a keycap's details.
+    The most useful way to use this class is to subclass it to make your own "base" class
     containing our kecap's parameters.  Example::
 
         class KeycapBase(Keycap):
@@ -83,66 +81,67 @@ class Keycap(object):
         retcode, output = getstatusoutput(str(tilde))
     """
     def __init__(self,  # noqa: C901
-            name=None,
-            render=None,
-            key_profile="riskeycap",
-            key_length=KEY_UNIT - BETWEENSPACE,
-            key_width=KEY_UNIT - BETWEENSPACE,
-            key_rotation=None,
-            key_height=8,
-            key_top_difference=5,
-            key_top_x=0,
-            key_top_y=0,
-            wall_thickness=0.45 * 2.5,
-            dish_thickness=1.0,
-            dish_type="cylinder",
-            dish_x=0,
-            dish_y=0,
-            dish_z=0,
-            dish_depth=1,
-            dish_invert=False,
-            dish_invert_division_x=4,
-            dish_invert_division_y=1,
-            dish_tilt=0,
-            dish_tilt_curve=True,
-            dish_fn=256,
-            dish_corner_fn=64,
-            uniform_wall_thickness=True,
-            polygon_layers=10,
-            polygon_layer_rotation=0,
-            polygon_edges=4,
-            polygon_rotation=True,
-            corner_radius=1,
-            corner_radius_curve=3,
-            stem_type="box_cherry",
-            stem_height=4,
-            stem_top_thickness=0.5,
-            stem_inset=1,
-            stem_inside_tolerance=0.2,
-            stem_outside_tolerance_x=0.05,
-            stem_outside_tolerance_y=0.05,
-            stem_side_supports=None,
-            stem_locations=None,
-            stem_sides_wall_thickness=0.65,
-            stem_snap_fit=False,
-            stem_walls_inset=1.05,
-            stem_walls_tolerance=0.2,
-            homing_dot_length=0,  # 0 means no "dot"
-            homing_dot_width=1,
-            homing_dot_x=0,
-            homing_dot_y=-2,
-            homing_dot_z=-0.35,  # How far it sticks out
-            legends=None,
-            fonts=None, font_sizes=None,
-            trans=None, trans2=None,
-            rotation=None, rotation2=None,
-            scale=None, underset=None,
-            legend_carved=False,
-            keycap_playground_path=Path("./keycap_playground.scad"),
-            file_type="3mf",
-            openscad_path=Path("/usr/bin/openscad"),
-            colorscad_path=None,
-            output_path=Path(".")):
+                 name=None,
+                 render=None,
+                 key_profile="riskeycap",
+                 key_length=KEY_UNIT - BETWEENSPACE,
+                 key_width=KEY_UNIT - BETWEENSPACE,
+                 key_rotation=None,
+                 key_height=8,
+                 key_top_difference=5,
+                 key_top_x=0,
+                 key_top_y=0,
+                 wall_thickness=0.45 * 2.5,
+                 dish_thickness=1.0,
+                 dish_type="cylinder",
+                 dish_x=0,
+                 dish_y=0,
+                 dish_z=0,
+                 dish_depth=1,
+                 dish_invert=False,
+                 dish_invert_division_x=4,
+                 dish_invert_division_y=1,
+                 dish_tilt=0,
+                 dish_tilt_curve=True,
+                 dish_fn=256,
+                 dish_corner_fn=64,
+                 uniform_wall_thickness=True,
+                 polygon_layers=10,
+                 polygon_layer_rotation=0,
+                 polygon_edges=4,
+                 polygon_rotation=True,
+                 corner_radius=1,
+                 corner_radius_curve=3,
+                 stem_type="box_cherry",
+                 stem_height=4,
+                 stem_top_thickness=0.5,
+                 stem_inset=1,
+                 stem_inside_tolerance=0.2,
+                 stem_outside_tolerance_x=0.05,
+                 stem_outside_tolerance_y=0.05,
+                 stem_side_supports=None,
+                 stem_locations=None,
+                 stem_sides_wall_thickness=0.65,
+                 stem_snap_fit=False,
+                 stem_walls_inset=1.05,
+                 stem_walls_tolerance=0.2,
+                 homing_dot_length=0,  # 0 means no "dot"
+                 homing_dot_width=1,
+                 homing_dot_x=0,
+                 homing_dot_y=-2,
+                 homing_dot_z=-0.35,  # How far it sticks out
+                 legends=None,
+                 fonts=None,
+                 font_sizes=None,
+                 trans=None, trans2=None,
+                 rotation=None, rotation2=None,
+                 scale=None, underset=None,
+                 legend_carved=False,
+                 keycap_playground_path=Path("./keycap_playground.scad"),
+                 file_type="3mf",
+                 openscad_path=Path("/usr/bin/openscad"),
+                 colorscad_path=None,
+                 output_path=Path(".")):
         if render is None:
             render = ["keycap", "stem"]
         if key_rotation is None:
@@ -367,7 +366,8 @@ class Keycap(object):
             f"LEGEND_ROTATION2={self.rotation2}; "
             f"LEGEND_SCALE={self.scale}; "
             f"LEGEND_UNDERSET={self.underset}; "
-# NOTE: For some reason I have to duplicate RENDER here for it to work properly:
+
+            # NOTE: For some reason I have to duplicate RENDER here for it to work properly:
             f"RENDER={json.dumps(render)};' "
             f"{last_part}"
         )
@@ -376,7 +376,5 @@ class Keycap(object):
         """
         Override anything passed in via kwargs
         """
-        # print(f"postinit kwargs: {kwargs}")
         for k, v in kwargs.items():
-            # print(f"Updating: {k}: {v}")
             self.__dict__.update({k: v})

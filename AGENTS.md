@@ -6,7 +6,7 @@
 - After making changes run to Python files run
     - "make fix-python" to fix any formatting issues
     - then "make check-python" to validate the syntax and style of the code
-    - finally "make test-unit" to validate the functinality of the code
+    - finally "make test" to validate the functinality of the code
 
 - To run the tests use "make test"
 

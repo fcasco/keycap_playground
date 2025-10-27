@@ -3,14 +3,15 @@
 Tests for the main script to validate OpenSCAD command generation with mocks
 """
 
-import unittest
-from unittest.mock import patch, MagicMock
 from pathlib import Path
+import subprocess
+import unittest
+from unittest.mock import patch
 
-from src.keyplay import RiskeycapBase, riskeycap_alphas, KEYCAPS
+from src.keyplay import RiskeycapBase, riskeycap_alphas, KEYCAPS, run_command, OPENSCAD_PATH
 
 
-class TestKeyplay(unittest.TestCase):
+class TestRiskeycapBase(unittest.TestCase):
     """Test cases for keyplay.py OpenSCAD command generation"""
 
     def setUp(self):
@@ -29,7 +30,7 @@ class TestKeyplay(unittest.TestCase):
 
         # Check that the command contains expected elements
         # The actual path to the OpenSCAD executable is used instead of just "openscad"
-        self.assertIn("OpenSCAD", command)  # Check for OpenSCAD in the path
+        self.assertIn(str(OPENSCAD_PATH), command)  # Check for OpenSCAD in the path
         self.assertIn("test_keycap.3mf", command)
         self.assertIn('RENDER=["keycap", "stem"]', command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
@@ -50,23 +51,18 @@ class TestKeyplay(unittest.TestCase):
         self.assertIn("KEY_ROTATION=[0, 110.1, -90]", command)
         self.assertIn('LEGENDS=["B"]', command)
 
-    @patch("subprocess.check_output")
-    def test_keycap_execution_with_mock(self, mock_check_output):
+    def test_keycap_execution_with_mock(self):
         """Test that keycap execution calls the correct OpenSCAD command"""
-        # Mock the subprocess call return value
-        mock_check_output.return_value = "Success"
-
         keycap = RiskeycapBase(
             name="mock_test_keycap",
             output_path=self.output_path,
             legends=["X"]
         )
 
-        # Get the command string
         command = str(keycap)
 
         # Verify the command contains expected elements
-        self.assertIn("OpenSCAD", command)  # Check for OpenSCAD in the path
+        self.assertIn(str(OPENSCAD_PATH), command)  # Check for OpenSCAD in the path
         self.assertIn("mock_test_keycap.3mf", command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["X"]', command)
@@ -108,7 +104,7 @@ class TestKeyplay(unittest.TestCase):
         # Test first few keycaps to make sure they generate valid commands
         for i, keycap in enumerate(KEYCAPS[:3]):  # Test first 3
             command = str(keycap)
-            self.assertIn("OpenSCAD", command)  # Check for OpenSCAD in the path
+            self.assertIn(str(OPENSCAD_PATH), command)  # Check for OpenSCAD in the path
             self.assertIn(f"{keycap.name}.{keycap.file_type}", command)
             self.assertIn('RENDER=["keycap", "stem"]', command)
 
@@ -116,15 +112,8 @@ class TestKeyplay(unittest.TestCase):
             if i >= 2:
                 break
 
-    @patch("subprocess.check_output")
-    @patch("asyncio.get_event_loop")
-    def test_keyplay_script_execution_with_mock(self, mock_get_event_loop, mock_check_output):
+    def test_keyplay_script_execution_with_mock(self):
         """Test that keyplay script execution uses the correct OpenSCAD command"""
-        # Mock the subprocess call and event loop
-        mock_check_output.return_value = "Success"
-        mock_loop = MagicMock()
-        mock_get_event_loop.return_value = mock_loop
-
         # Create a keycap from the keyplay script
         keycap = RiskeycapBase(
             name="script_test_keycap",
@@ -136,19 +125,63 @@ class TestKeyplay(unittest.TestCase):
         command = str(keycap)
 
         # Ensure the command contains the expected elements
-        self.assertIn("OpenSCAD", command)  # Path to OpenSCAD executable
+        self.assertIn(str(OPENSCAD_PATH), command)  # Path to OpenSCAD executable
         self.assertIn("script_test_keycap.3mf", command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["Z"]', command)
-
-        # Verify that the command would be executed via subprocess
-        # In the real script, this would be called by run_command function
-        mock_check_output.assert_not_called()  # Only testing command generation
-
-        # Test that the command contains all the default parameters from RiskeycapBase
         self.assertIn("KEY_ROTATION=[0, 110.1, -90]", command)
         self.assertIn("WALL_THICKNESS=1.0125", command)  # 0.45 * 2.25
         self.assertIn("UNIFORM_WALL_THICKNESS=true", command)
+
+
+class TestKeyplayRunFunction(unittest.TestCase):
+    """Test the run_command function from keyplay module"""
+
+    def test_run_command_success(self):
+        """Test that run_command executes successfully with mock subprocess"""
+        test_cmd = "echo 'hello world'"
+
+        with patch("subprocess.check_output") as mock_check_output:
+            mock_check_output.return_value = "hello world\n"
+
+            result = run_command(test_cmd)
+
+            # Verify that subprocess.check_output was called with correct parameters
+            mock_check_output.assert_called_once_with(
+                test_cmd,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                shell=True,
+                cwd=unittest.mock.ANY  # We don't care about the exact cwd
+            )
+
+            # Verify the result is what we expected
+            self.assertEqual(result, "hello world\n")
+
+    def test_run_command_error_handling(self):
+        """Test that run_command handles CalledProcessError properly"""
+        # Simulate a CalledProcessError
+        test_cmd = "nonexistent_command"
+
+        with patch("subprocess.check_output") as mock_check_output:
+            # Create a mock exception with an output
+            mock_exception = subprocess.CalledProcessError(1, test_cmd)
+            mock_exception.output = "Command failed\n"
+            mock_check_output.side_effect = mock_exception
+
+            result = run_command(test_cmd)
+
+            # Verify that subprocess.check_output was called with correct parameters
+            mock_check_output.assert_called_once_with(
+                test_cmd,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                shell=True,
+                cwd=unittest.mock.ANY  # We don't care about the exact cwd
+            )
+
+            # Verify the result is the error output from the exception
+            self.assertEqual(result, "Command failed\n")
 
 
 if __name__ == "__main__":
