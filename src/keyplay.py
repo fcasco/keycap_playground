@@ -28,20 +28,23 @@ Fonts used by this script:
  * Noto
 """
 import asyncio
+import functools
+import logging
 import os
+import pathlib
 import subprocess
 import sys
-from asyncio import ensure_future
 from copy import deepcopy
-from functools import partial
-from pathlib import Path
 from typing import Any, Sequence
 
 from src.keycap import Keycap
 
+
+logger = logging.getLogger(__name__)
+
 # Change these to the correct paths in your environment:
 # OPENSCAD_PATH = Path("/usr/bin/openscad")
-OPENSCAD_PATH = Path("/home/facundo/Downloads/OpenSCAD-2025.10.16.ai28406-x86_64.AppImage")
+OPENSCAD_PATH = pathlib.Path("/home/facundo/bin/openscad")
 COLORSCAD_PATH = None
 
 KEY_UNIT = 19.05  # Square that makes up the entire space of a key
@@ -58,6 +61,7 @@ def run_command(cmd: str) -> str:
     :param cmd: Well-formed behave command to run.
     :return: Command output as string.
     """
+    logger.debug(f"Running {cmd}")
     try:
         output = subprocess.check_output(
             cmd,
@@ -67,6 +71,7 @@ def run_command(cmd: str) -> str:
             cwd=os.getcwd(),
         )
     except subprocess.CalledProcessError as e:
+        logger.exception(f"Error running {cmd}\n{e}")
         output = e.output
 
     return output
@@ -79,11 +84,20 @@ async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str, sem
     :param command: Command to run.
     :return: Result of the command.
     """
+    logger.debug("Starting commands loop")
     async with semaphore:
-        runner = partial(run_command, command)
+        runner = functools.partial(run_command, command)
         output = await loop.run_in_executor(None, runner)
         await asyncio.sleep(1)  # Slowing a bit for demonstration purposes
         return output
+
+
+async def process_result(result: Any):
+    """
+    Do something useful with result of the commands
+    """
+    logger.debug("Processing command result")
+    print(result)
 
 
 async def run_all_commands(semaphore, commands: Sequence[str] = COMMANDS) -> None:
@@ -91,18 +105,14 @@ async def run_all_commands(semaphore, commands: Sequence[str] = COMMANDS) -> Non
     Run all commands in a list
     :param commands: List of commands to run.
     """
+    logger.debug("Running all commands")
     loop = asyncio.get_event_loop()
     fs = [run_command_on_loop(loop, command, semaphore) for command in commands]
     for f in asyncio.as_completed(fs):
         result = await f
-        ensure_future(process_result(result))
+        asyncio.ensure_future(process_result(result))
 
-
-async def process_result(result: Any):
-    """
-    Do something useful with result of the commands
-    """
-    print(result)
+    logger.info("All commands completed")
 
 
 class RiskeycapBase(Keycap):
@@ -112,9 +122,11 @@ class RiskeycapBase(Keycap):
     def __init__(self, **kwargs):
         self.openscad_path = OPENSCAD_PATH
         self.colorscad_path = COLORSCAD_PATH
+
         super().__init__(**kwargs,
                          openscad_path=self.openscad_path,
                          colorscad_path=self.colorscad_path)
+
         self.render = ["keycap", "stem"]
         self.file_type = FILE_TYPE
         self.key_profile = "riskeycap"
@@ -1024,7 +1036,7 @@ def run(args):
         os.mkdir(args.out)
     print(f"Outputting to: {args.out}")
 
-    semahpore = asyncio.Semaphore(args.max_processes)
+    semaphore = asyncio.Semaphore(args.max_processes)
 
     if args.names:
         matched = False
@@ -1087,7 +1099,7 @@ def run(args):
                         continue
                 print(f"Rendering {args.out}/{legend.name}.{legend.file_type}...")
                 print(legend)
-                COMMANDS.append(str(keycap))
+                COMMANDS.append(str(legend))
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(run_all_commands(semaphore=semahpore, commands=COMMANDS))
+    loop.run_until_complete(run_all_commands(semaphore=semaphore, commands=COMMANDS))
