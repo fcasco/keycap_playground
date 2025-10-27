@@ -9,4 +9,5 @@
     - finally "make test" to validate the functinality of the code
 
 - To run the tests use "make test"
+- Keep all the imports at the top of the file, sorted, stdlib, third party, own code
 
