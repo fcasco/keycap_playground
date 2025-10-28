@@ -31,7 +31,7 @@ class TestRiskeycapBase(unittest.TestCase):
         # Check that the command contains expected elements
         # The actual path to the OpenSCAD executable is used instead of just "openscad"
         self.assertIn(str(OPENSCAD_PATH), command)  # Check for OpenSCAD in the path
-        self.assertIn("test_keycap.3mf", command)
+        self.assertIn("test_keycap.stl", command)
         self.assertIn('RENDER=["keycap", "stem"]', command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["A"]', command)
@@ -63,7 +63,7 @@ class TestRiskeycapBase(unittest.TestCase):
 
         # Verify the command contains expected elements
         self.assertIn(str(OPENSCAD_PATH), command)  # Check for OpenSCAD in the path
-        self.assertIn("mock_test_keycap.3mf", command)
+        self.assertIn("mock_test_keycap.stl", command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["X"]', command)
 
@@ -126,7 +126,7 @@ class TestRiskeycapBase(unittest.TestCase):
 
         # Ensure the command contains the expected elements
         self.assertIn(str(OPENSCAD_PATH), command)  # Path to OpenSCAD executable
-        self.assertIn("script_test_keycap.3mf", command)
+        self.assertIn("script_test_keycap.stl", command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["Z"]', command)
         self.assertIn("KEY_ROTATION=[0, 110.1, -90]", command)

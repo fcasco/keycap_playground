@@ -16,6 +16,10 @@ def make_args_parser():
     args_parser.add_argument("-l", "--legends",
                              required=False, action="store_true",
                              help="If True, generate a separate set of files for legends.")
+    args_parser.add_argument("-t", "--file-type",
+                             required=False, type=str, default="stl",
+                             choices=["stl", "3mf"],
+                             help="Output file type (default: stl, options: stl, 3mf)")
     args_parser.add_argument("-k", "--keycaps",
                              required=False, action="store_true",
                              help="If True, prints out the names of all keycaps we can render.")

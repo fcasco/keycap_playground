@@ -15,6 +15,7 @@ class MockArgs:
         self.names = kwargs.get("names", None)
         self.legends = kwargs.get("legends", False)
         self.force = kwargs.get("force", False)
+        self.file_type = kwargs.get("file_type", "stl")
 
 
 class TestMakeCommandsFunction(unittest.TestCase):
@@ -49,7 +50,7 @@ class TestMakeCommandsFunction(unittest.TestCase):
             # Check that the command contains expected elements
             command_str = str(commands[0])
             self.assertIn("test_keycap", command_str)
-            self.assertIn(".3mf", command_str)
+            self.assertIn(".stl", command_str)
             self.assertIn('RENDER=["keycap", "stem"]', command_str)
             self.assertIn('LEGENDS=["A"]', command_str)
         finally:
@@ -70,6 +71,7 @@ class TestMakeCommandsFunction(unittest.TestCase):
         # Check that each command is a string
         for command in commands:
             self.assertIsInstance(command, str, "Each command should be a string")
+            self.assertIn(".stl", command, "Default file type should be .stl")
 
     def test_make_commands_specific_keycap_names(self):
         """Test make_commands processes only specific keycap names when provided"""
@@ -200,6 +202,79 @@ class TestMakeCommandsFunction(unittest.TestCase):
             0,
             "Should not generate commands when keycap name is not found",
         )
+
+    def test_make_commands_with_file_type_stl(self):
+        """Test make_commands generates commands with STL file type when specified"""
+        # Find a keycap that exists in the KEYCAPS list
+        if len(KEYCAPS) > 0:
+            test_keycap_name = KEYCAPS[0].name
+
+            args = MockArgs(names=[test_keycap_name], file_type="stl", force=True)
+
+            # Call make_commands
+            commands = make_commands(args)
+
+            # Check that we got commands
+            self.assertGreater(
+                len(commands),
+                0,
+                f"Should generate commands for keycap '{test_keycap_name}'",
+            )
+
+            # Check that the command contains the STL file type
+            command_str = str(commands[0])
+            self.assertIn(test_keycap_name, command_str)
+            self.assertIn(".stl", command_str)
+            self.assertNotIn(".3mf", command_str)
+
+    def test_make_commands_with_file_type_3mf(self):
+        """Test make_commands generates commands with 3MF file type when specified"""
+        # Find a keycap that exists in the KEYCAPS list
+        if len(KEYCAPS) > 0:
+            test_keycap_name = KEYCAPS[0].name
+
+            args = MockArgs(names=[test_keycap_name], file_type="3mf", force=True)
+
+            # Call make_commands
+            commands = make_commands(args)
+
+            # Check that we got commands
+            self.assertGreater(
+                len(commands),
+                0,
+                f"Should generate commands for keycap '{test_keycap_name}'",
+            )
+
+            # Check that the command contains the 3MF file type
+            command_str = str(commands[0])
+            self.assertIn(test_keycap_name, command_str)
+            self.assertIn(".3mf", command_str)
+            self.assertNotIn(".stl", command_str)
+
+    def test_make_commands_default_file_type_is_stl(self):
+        """Test make_commands uses STL as the default file type"""
+        # Find a keycap that exists in the KEYCAPS list
+        if len(KEYCAPS) > 0:
+            test_keycap_name = KEYCAPS[0].name
+
+            # Create args without specifying file_type (should default to stl)
+            args = MockArgs(names=[test_keycap_name], force=True)
+
+            # Call make_commands
+            commands = make_commands(args)
+
+            # Check that we got commands
+            self.assertGreater(
+                len(commands),
+                0,
+                f"Should generate commands for keycap '{test_keycap_name}'",
+            )
+
+            # Check that the command contains the STL file type by default
+            command_str = str(commands[0])
+            self.assertIn(test_keycap_name, command_str)
+            self.assertIn(".stl", command_str)
+            self.assertNotIn(".3mf", command_str)
 
 
 if __name__ == "__main__":

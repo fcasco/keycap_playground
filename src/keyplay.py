@@ -104,7 +104,7 @@ class RiskeycapBase(Keycap):
     """
     Base keycap definitions for the riskeycap profile + our personal prefs.
     """
-    default_file_type = "3mf"  # 3mf or stl
+    default_file_type = "stl"  # 3mf or stl
 
     def __init__(self, **kwargs):
         self.openscad_path = OPENSCAD_PATH
@@ -1024,6 +1024,7 @@ def make_commands(args):
             for keycap in KEYCAPS:
                 if keycap.name.lower() == name.lower():
                     keycap.output_path = f"{args.out}"
+                    keycap.file_type = args.file_type
                     matched = True
                     exists = False
                     if not args.force:
@@ -1053,6 +1054,7 @@ def make_commands(args):
         # First render the keycaps
         for keycap in KEYCAPS:
             keycap.output_path = f"{args.out}"
+            keycap.file_type = args.file_type
             if not args.force:
                 if os.path.exists(f"{args.out}/{keycap.name}.{keycap.file_type}"):
                     print(f"{args.out}/{keycap.name}.{keycap.file_type} exists; skipping...")
@@ -1069,8 +1071,6 @@ def make_commands(args):
                 legend.name = f"{legend.name}_legends"
                 legend.output_path = f"{args.out}"
                 legend.render = ["legends"]
-                # Change it to .stl since PrusaSlicer doesn't like .3mf
-                # for "parts" for unknown reasons...
                 legend.file_type = "stl"
                 if not args.force:
                     if os.path.exists(f"{args.out}/{legend.name}.{legend.file_type}"):
