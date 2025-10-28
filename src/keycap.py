@@ -8,9 +8,14 @@ keycaps using the Keycap Playground.
     `Path(<whatever>)` variables it should work on anything.
 """
 
-import os
 import json
-from pathlib import Path
+import os
+import pathlib
+
+# Change these to the correct paths in your environment:
+# OPENSCAD_PATH = Path("/usr/bin/openscad")
+OPENSCAD_PATH = pathlib.Path("/home/facundo/bin/openscad")
+COLORSCAD_PATH = None
 
 KEY_UNIT = 19.05  # Square that makes up the entire space of a key
 BETWEENSPACE = 0.8  # Space between keycaps
@@ -30,7 +35,7 @@ class ColorscadException(Exception):
     pass
 
 
-class Keycap(object):
+class Keycap:
     """
     A convenient abstraction for specifying a keycap's details.
     The most useful way to use this class is to subclass it to make your own "base" class
@@ -137,11 +142,15 @@ class Keycap(object):
                  rotation=None, rotation2=None,
                  scale=None, underset=None,
                  legend_carved=False,
-                 keycap_playground_path=Path("./keycap_playground.scad"),
+                 keycap_playground_path=pathlib.Path("./keycap_playground.scad"),
                  file_type="3mf",
-                 openscad_path=Path("/usr/bin/openscad"),
+                 openscad_path=OPENSCAD_PATH,
                  colorscad_path=None,
-                 output_path=Path(".")):
+                 output_path=pathlib.Path(".")):
+
+        self.openscad_path = OPENSCAD_PATH
+        self.colorscad_path = COLORSCAD_PATH
+
         if render is None:
             render = ["keycap", "stem"]
         if key_rotation is None:

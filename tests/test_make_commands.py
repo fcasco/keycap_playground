@@ -2,17 +2,18 @@
 Tests for the make_commands function in keyplay.py
 """
 
-from pathlib import Path
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
-from src.keyplay import RiskeycapBase, KEYCAPS, make_commands
+from src.keyplay import make_commands
+from src.riskeycap import KEYCAPS, RiskeycapBase
 
 
 class MockArgs:
     def __init__(self, **kwargs):
         self.out = kwargs.get("out", "/tmp/test_output")
-        self.names = kwargs.get("names", None)
+        self.names = kwargs.get("names")
         self.legends = kwargs.get("legends", False)
         self.force = kwargs.get("force", False)
         self.file_type = kwargs.get("file_type", "stl")

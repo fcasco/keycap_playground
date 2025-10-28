@@ -63,5 +63,4 @@ quote-style = "double"
 [tool.ruff.lint]
 extend-select = ["E302"]
 preview = true
-select = ["A", "B", "C", "E", "F", "Q", "W", "I", "UP", "SIM", "PGH", "PL", "PT", "RUF", "TRY", "FLY"]
-line-too-long-threshold = 99
+select = ["A", "B", "C", "E", "F", "Q", "W", "I", "UP", "PGH", "RUF", "FLY"]

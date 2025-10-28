@@ -3,12 +3,14 @@
 Tests for the main script to validate OpenSCAD command generation with mocks
 """
 
-from pathlib import Path
+import pathlib
 import subprocess
 import unittest
 from unittest.mock import patch
 
-from src.keyplay import RiskeycapBase, riskeycap_alphas, KEYCAPS, run_command, OPENSCAD_PATH
+from src.keycap import OPENSCAD_PATH
+from src.keyplay import run_command
+from src.riskeycap import KEYCAPS, RiskeycapBase, riskeycap_alphas
 
 
 class TestRiskeycapBase(unittest.TestCase):
@@ -16,7 +18,7 @@ class TestRiskeycapBase(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures"""
-        self.output_path = Path("/tmp/test_output")
+        self.output_path = pathlib.Path("/tmp/test_output")
 
     def test_basic_keycap_command_generation(self):
         """Test that the RiskeycapBase class generates the correct OpenSCAD command"""
@@ -125,7 +127,7 @@ class TestRiskeycapBase(unittest.TestCase):
         command = str(keycap)
 
         # Ensure the command contains the expected elements
-        self.assertIn(str(OPENSCAD_PATH), command)  # Path to OpenSCAD executable
+        self.assertIn(str(OPENSCAD_PATH), command)
         self.assertIn("script_test_keycap.stl", command)
         self.assertIn('KEY_PROFILE="riskeycap"', command)
         self.assertIn('LEGENDS=["Z"]', command)
