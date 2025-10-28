@@ -1,3 +1,56 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "keycap-playground"
+version = "0.1.0"
+description = "A parametric OpenSCAD keycap generator for creating custom keyboard keycaps"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "GPL-3.0-or-later"
+authors = [
+    {name = "Keycap Playground Contributors"}
+]
+keywords = ["openscad", "3d-printing", "mechanical-keyboard", "keycaps", "parametric-design"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Manufacturing",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Topic :: Utilities"
+]
+
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.6",
+]
+all = [
+    "keycap-playground[dev]",
+]
+
+[project.scripts]
+keycap-playground = "src.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/fcasco/keycap_playground"
+Repository = "https://github.com/fcasco/keycap_playground"
+Issues = "https://github.com/fcasco/keycap_playground/issues"
+
+[tool.setuptools]
+packages = ["src"]
+
 [tool.ruff]
 line-length = 96
 indent-width = 4
@@ -10,9 +63,5 @@ quote-style = "double"
 [tool.ruff.lint]
 extend-select = ["E302"]
 preview = true
-select = ["A", "B", "C", "E", "F", "Q", "W"]
-
-[dependency-groups]
-dev = [
-    "sca2d>=0.3.1",
-]
+select = ["A", "B", "C", "E", "F", "Q", "W", "I", "UP", "SIM", "PGH", "PL", "PT", "RUF", "TRY", "FLY"]
+line-too-long-threshold = 99
