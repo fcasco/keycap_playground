@@ -17,6 +17,7 @@ Fonts used by this script:
  * DejaVu Sans:style=Bold
  * Noto
 """
+
 import asyncio
 import functools
 import logging
@@ -53,7 +54,7 @@ def run_command(cmd: str) -> str:
     return output
 
 
-async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str, semaphore) -> bool:
+async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str, semaphore) -> str:
     """
     Run test for one particular feature, check its result and return report.
     :param loop: Loop to use.
@@ -97,14 +98,14 @@ def print_keycaps():
     Prints the names of all keycaps in KEYCAPS.
     """
     keycap_names = ", ".join(a.name for a in KEYCAPS)
-    print(f"Here's all the keycaps we can render:\n{keycap_names}")
+    logger.info(f"Here's all the keycaps we can render:\n{keycap_names}")
 
 
 def should_skip_file(output_path, name, file_type, force):
     """Check if a file should be skipped based on existence and force flag."""
     file_path = f"{output_path}/{name}.{file_type}"
     if not force and os.path.exists(file_path):
-        print(f"{file_path} exists; skipping...")
+        logger.info(f"{file_path} exists; skipping...")
         return True
     return False
 
@@ -117,8 +118,8 @@ def make_keycap_command(keycap, output_path, file_type, force):
     if should_skip_file(output_path, keycap.name, file_type, force):
         return
 
-    print(f"Rendering {output_path}/{keycap.name}.{file_type}...")
-    print(keycap)
+    logger.info(f"Rendering {output_path}/{keycap.name}.{file_type}...")
+    logger.debug(f"Keycap details: {keycap}")
     return str(keycap)
 
 
@@ -140,20 +141,20 @@ def make_legend_command(keycap, output_path, force):
     legend.render = ["legends"]
     legend.file_type = legend_file_type
 
-    print(f"Rendering {output_path}/{legend.name}.{legend_file_type}...")
-    print(legend)
+    logger.info(f"Rendering {output_path}/{legend.name}.{legend_file_type}...")
+    logger.debug(f"Legend details: {legend}")
     return str(legend)
 
 
 def process_specific_keycaps(args):
     """Process commands for specific keycap names."""
     commands = []
-    matched = False
 
     for name in args.names:
+        name_found = False
         for keycap in KEYCAPS:
             if keycap.name.lower() == name.lower():
-                matched = True
+                name_found = True
                 new_command = make_keycap_command(keycap, args.out, args.file_type, args.force)
                 if new_command:
                     commands.append(new_command)
@@ -162,9 +163,10 @@ def process_specific_keycaps(args):
                     new_command = make_legend_command(keycap, args.out, args.force)
                     if new_command:
                         commands.append(new_command)
+                break
 
-    if not matched:
-        print(f"Could not find a keycap named {name}")
+        if not name_found:
+            logger.warning(f"Could not find a keycap named {name}")
 
     return commands
 
@@ -196,7 +198,7 @@ def make_commands(args):
 
 
 def run(args):
-    print(f"Outputting to: {args.out}")
+    logger.info(f"Outputting to: {args.out}")
 
     commands = make_commands(args)
     semaphore = asyncio.Semaphore(args.max_processes)
