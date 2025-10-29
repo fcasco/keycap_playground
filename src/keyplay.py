@@ -99,7 +99,7 @@ async def run_all_commands(semaphore: asyncio.Semaphore, commands: Sequence[str]
     logger.debug(f"{results=}")
 
 
-def print_keycaps():
+def print_keycaps() -> None:
     """
     Prints the names of all keycaps in KEYCAPS.
     """

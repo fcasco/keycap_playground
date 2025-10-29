@@ -78,7 +78,7 @@ def merge_config_with_args(
     return merged_args
 
 
-def make_args_parser():
+def make_args_parser() -> argparse.ArgumentParser:
     args_parser = argparse.ArgumentParser(description="Render a full set of riskeycap keycaps.")
     args_parser.add_argument(
         "-c",
@@ -156,7 +156,7 @@ def make_args_parser():
     return args_parser
 
 
-def main():
+def main() -> None:
     args_parser = make_args_parser()
     args = args_parser.parse_args()
 
