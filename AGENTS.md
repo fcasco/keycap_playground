@@ -1,13 +1,29 @@
-# Keycap Playground
+# Keycap Playground - Agent Guidelines
 
-- Read the README.md file to know the details of the project
-- Use "make check" as first step to validate the changes to the Python code
+## Essential Commands
+- `make check` - Run all validation (Python style, types, OpenSCAD)
+- `make fix-python` - Auto-fix formatting with ruff
+- `make check-python` - Validate Python style
+- `make check-types` - Validate Python types with ty
+- `make check-scad` - Validate OpenSCAD files
+- `make test` - Run all tests
+- Single test: `python -m unittest tests.test_keycap.TestKeycap.test_name -v`
 
-- After making changes run to Python files run
-    - "make fix-python" to fix any formatting issues
-    - then "make check-python" to validate the syntax and style of the code
-    - finally "make test" to validate the functinality of the code
+## Code Style (ruff + ty)
+- Max line length: 96 chars, 4-space indentation
+- Import order: stdlib → third-party → local (sorted alphabetically)
+- Use ruff for linting/formatting, ty for type checking
+- Python >=3.13 supported, requires type annotations
+- Custom exceptions inherit from Exception, use """ docstrings
+- Class names: PascalCase, functions/variables: snake_case
 
-- To run the tests use "make test"
-- Keep all the imports at the top of the file, sorted, stdlib, third party, own code
+## OpenSCAD Files
+- Use sca2d for validation: `uv run sca2d .`
+- OpenSCAD path: `/home/facundo/bin/openscad`
+- Keep OpenSCAD constants in `constants.scad`
+
+## Testing & Validation
+- Tests use unittest framework in `tests/` directory
+- Run single test with specific test method name
+- All changes must pass `make check` before committing
 

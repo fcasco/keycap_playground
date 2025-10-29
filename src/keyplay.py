@@ -23,10 +23,13 @@ import functools
 import logging
 import os
 import subprocess
+from argparse import Namespace
 from collections.abc import Sequence
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
+from src.keycap import Keycap
 from src.riskeycap import KEYCAPS
 
 logger = logging.getLogger(__name__)
@@ -54,7 +57,9 @@ def run_command(cmd: str) -> str:
     return output
 
 
-async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str, semaphore) -> str:
+async def run_command_on_loop(
+    loop: asyncio.AbstractEventLoop, command: str, semaphore: asyncio.Semaphore
+) -> str:
     """
     Run test for one particular feature, check its result and return report.
     :param loop: Loop to use.
@@ -69,14 +74,15 @@ async def run_command_on_loop(loop: asyncio.AbstractEventLoop, command: str, sem
         return output
 
 
-async def process_result(result: Any):  # noqa:RUF029
+async def process_result(result: Any) -> None:
     """
     Do something useful with result of the commands
     """
+    await asyncio.sleep(0)  # Make it a proper coroutine
     logger.debug(f"Processing command result: {result}")
 
 
-async def run_all_commands(semaphore, commands: Sequence[str]) -> None:
+async def run_all_commands(semaphore: asyncio.Semaphore, commands: Sequence[str]) -> None:
     """
     Run all commands in a list
     :param commands: List of commands to run.
@@ -101,7 +107,7 @@ def print_keycaps():
     logger.info(f"Here's all the keycaps we can render:\n{keycap_names}")
 
 
-def should_skip_file(output_path, name, file_type, force):
+def should_skip_file(output_path: Path | str, name: str, file_type: str, force: bool) -> bool:
     """Check if a file should be skipped based on existence and force flag."""
     file_path = f"{output_path}/{name}.{file_type}"
     if not force and os.path.exists(file_path):
@@ -110,12 +116,14 @@ def should_skip_file(output_path, name, file_type, force):
     return False
 
 
-def make_keycap_command(keycap, output_path, file_type, force):
+def make_keycap_command(
+    keycap: Keycap, output_path: Path, file_type: str, force: bool
+) -> str | None:
     """Make a command for a keycap to the commands list."""
     keycap.output_path = output_path
     keycap.file_type = file_type
 
-    if should_skip_file(output_path, keycap.name, file_type, force):
+    if should_skip_file(output_path, keycap.name or "", file_type, force):
         return
 
     logger.info(f"Rendering {output_path}/{keycap.name}.{file_type}...")
@@ -123,7 +131,7 @@ def make_keycap_command(keycap, output_path, file_type, force):
     return str(keycap)
 
 
-def make_legend_command(keycap, output_path, force):
+def make_legend_command(keycap: Keycap, output_path: Path, force: bool) -> str | None:
     """Add a command for keycap legends to the commands list."""
     if keycap.legends == [""]:
         return
@@ -146,7 +154,7 @@ def make_legend_command(keycap, output_path, force):
     return str(legend)
 
 
-def process_specific_keycaps(args):
+def process_specific_keycaps(args: Namespace) -> list[str]:
     """Process commands for specific keycap names."""
     commands = []
 
@@ -171,7 +179,7 @@ def process_specific_keycaps(args):
     return commands
 
 
-def process_all_keycaps(args):
+def process_all_keycaps(args: Namespace) -> list[str]:
     """Process commands for all keycaps."""
     commands = []
     for keycap in KEYCAPS:
@@ -187,7 +195,7 @@ def process_all_keycaps(args):
     return commands
 
 
-def make_commands(args):
+def make_commands(args: Namespace) -> list[str]:
     """Returns a list of commands to generate the keycaps using OpenSCAD"""
     if args.names:
         commands = process_specific_keycaps(args)
@@ -197,7 +205,7 @@ def make_commands(args):
     return commands
 
 
-def run(args):
+def run(args: Namespace) -> None:
     logger.info(f"Outputting to: {args.out}")
 
     commands = make_commands(args)
