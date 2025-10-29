@@ -10,6 +10,7 @@ class RiskeycapBase(Keycap):
     """
     Base keycap definitions for the riskeycap profile + our personal prefs.
     """
+
     default_file_type = "stl"  # 3mf or stl
 
     def __init__(self, **kwargs):
@@ -86,6 +87,7 @@ class riskeycap_alphas(RiskeycapBase):
     """
     Basic alphanumeric characters (centered, big legend)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes = [
@@ -105,6 +107,7 @@ class riskeycap_alphas_homing_dot(riskeycap_alphas):
     """
     Same as regular alpha but with a 3mm-wide homing "dot"
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.homing_dot_length = 3
@@ -118,6 +121,7 @@ class riskeycap_numrow(RiskeycapBase):
     """
     Number row numbers are slightly different
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fonts = [
@@ -157,18 +161,20 @@ class riskeycap_tilde(riskeycap_numrow):
     """
     Tilde needs some changes because by default it's too small
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[0] = 6.5  # ` symbol
         self.font_sizes[2] = 5.5  # ~ symbol
         self.trans[0] = [-0.3, -2.7, 0]  # `
-        self.trans[2] = [5.5, -1, 1]    # ~
+        self.trans[2] = [5.5, -1, 1]  # ~
 
 
 class riskeycap_2(riskeycap_numrow):
     """
     2 needs some changes based on the @ symbol
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fonts[2] = "Aharoni"
@@ -181,6 +187,7 @@ class riskeycap_3(riskeycap_numrow):
     """
     3 needs some changes based on the # symbol (slightly too big)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[2] = 4.5  # # symbol (Gotham Rounded)
@@ -192,6 +199,7 @@ class riskeycap_5(riskeycap_numrow):
     """
     5 needs some changes based on the % symbol (too big, too close to bar)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[2] = 4  # % symbol
@@ -202,6 +210,7 @@ class riskeycap_6(riskeycap_numrow):
     """
     6 needs some changes based on the ^ symbol (too small, should be up high)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[2] = 5.8  # ^ symbol
@@ -212,6 +221,7 @@ class riskeycap_7(riskeycap_numrow):
     """
     7 needs some changes based on the & symbol (it's too big)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[2] = 4.5  # & symbol
@@ -222,6 +232,7 @@ class riskeycap_8(riskeycap_numrow):
     """
     8 needs some changes based on the tiny * symbol
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[2] = 8.5  # * symbol (Gotham Rounded)
@@ -232,6 +243,7 @@ class riskeycap_equal(riskeycap_numrow):
     """
     = needs some changes because it and the + are a bit off center
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[0] = [-0.3, -0.5, 0]  # = sign adjustments
@@ -242,6 +254,7 @@ class riskeycap_dash(riskeycap_numrow):
     """
     The dash (-) is fine but the underscore (_) needs minor repositioning.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[2] = [5.2, -1, 1]  # _ needs to go down and to the right a bit
@@ -252,6 +265,7 @@ class riskeycap_double_legends(RiskeycapBase):
     """
     For regular keys that have two legends... ,./;'[]
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fonts = [
@@ -286,6 +300,7 @@ class riskeycap_gt_lt(riskeycap_double_legends):
     """
     The greater than (>) and less than (<) signs need to be adjusted down a bit
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[0] = [-0.3, -0.1, 0]  # , and . are the tiniest bit too high
@@ -296,6 +311,7 @@ class riskeycap_brackets(riskeycap_double_legends):
     """
     The curly braces `{}` needs to be moved to the right a smidge
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[2] = [5.2, 0, 1]  # Just a smidge to the right
@@ -306,6 +322,7 @@ class riskeycap_semicolon(riskeycap_double_legends):
     The semicolon ends up being slightly higher than the colon but it looks
     better if the top dot in both is aligned.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[0] = [0.2, -0.4, 0]
@@ -316,6 +333,7 @@ class riskeycap_1_U_text(riskeycap_alphas):
     """
     Ctrl, Del, and Ins need to be downsized and moved a smidge.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -328,6 +346,7 @@ class riskeycap_1_U_2_row_text(riskeycap_alphas):
     """
     Scroll Lock, Page Up, Page Down, etc need a bunch of changes.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -347,6 +366,7 @@ class riskeycap_arrows(riskeycap_alphas):
     """
     Arrow symbols (◀▶▲▼) needs a different font (Hack)
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fonts[0] = "Hack"
@@ -359,6 +379,7 @@ class riskeycap_fontawesome(riskeycap_alphas):
     """
     For regular centered FontAwesome icon keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -372,6 +393,7 @@ class riskeycap_material_icons(riskeycap_alphas):
     """
     For regular centered Material Design icon keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -385,6 +407,7 @@ class riskeycap_1_25U(riskeycap_alphas):
     """
     The base for all 1.25U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -392,7 +415,7 @@ class riskeycap_1_25U(riskeycap_alphas):
         self.key_rotation = [0, 110.1, -90]
         self.trans[0] = [3, 0.2, 0]
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("1.25U_"):
+        if not self.name or not self.name.startswith("1.25U_"):
             self.name = f"1.25U_{self.name}"
 
 
@@ -402,6 +425,7 @@ class riskeycap_1_5U(riskeycap_double_legends):
 
     .. note:: Uses riskeycap_double_legends because of the \\| key.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -409,7 +433,7 @@ class riskeycap_1_5U(riskeycap_double_legends):
         self.key_rotation = [0, 109.335, -90]
         self.trans[0] = [3, 0.2, 0]
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("1.5U_"):
+        if not self.name or not self.name.startswith("1.5U_"):
             self.name = f"1.5U_{self.name}"
 
 
@@ -417,6 +441,7 @@ class riskeycap_bslash_1U(riskeycap_double_legends):
     """
     Backslash key needs a very minor adjustment to the backslash.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[0] = [-0.9, 0, 0]  # Move \ to the left a bit more than normal
@@ -426,6 +451,7 @@ class riskeycap_bslash(riskeycap_1_5U):
     """
     Backslash key needs a very minor adjustment to the backslash.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.trans[0] = [-0.9, 0, 0]  # Move \ to the left a bit more than normal
@@ -435,6 +461,7 @@ class riskeycap_tab(riskeycap_1_5U):
     """
     "Tab" needs to be centered.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.font_sizes[0] = 4.5  # Regular Gotham Rounded
@@ -445,13 +472,14 @@ class riskeycap_1_75U(riskeycap_alphas):
     """
     The base for all 1.75U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
         self.key_length = KEY_UNIT * 1.75 - BETWEENSPACE
         self.key_rotation = [0, 109.335, -90]
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("1.75U_"):
+        if not self.name or not self.name.startswith("1.75U_"):
             self.name = f"1.75U_{self.name}"
 
 
@@ -459,6 +487,7 @@ class riskeycap_2U(riskeycap_alphas):
     """
     The base for all 2U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -468,7 +497,7 @@ class riskeycap_2U(riskeycap_alphas):
             self.key_rotation = [0, 113.65, -90]  # Spacebars are different
         self.stem_locations = [[0, 0, 0], [12, 0, 0], [-12, 0, 0]]
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("2U_"):
+        if not self.name or not self.name.startswith("2U_"):
             self.name = f"2U_{self.name}"
 
 
@@ -476,6 +505,7 @@ class riskeycap_2UV(riskeycap_alphas):
     """
     The base for all 2U (vertical; for numpad) keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)  # Because self.trans[0] updates in place
@@ -496,7 +526,7 @@ class riskeycap_2UV(riskeycap_alphas):
             [0, 0, 0],
         ]
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("2UV_"):
+        if not self.name or not self.name.startswith("2UV_"):
             self.name = f"2UV_{self.name}"
 
 
@@ -504,6 +534,7 @@ class riskeycap_2_25U(riskeycap_alphas):
     """
     The base for all 2.25U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -515,7 +546,7 @@ class riskeycap_2_25U(riskeycap_alphas):
         self.trans[0] = [3.1, 0.2, 0]
         self.font_sizes[0] = 4
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("2.25U_"):
+        if not self.name or not self.name.startswith("2.25U_"):
             self.name = f"2.25U_{self.name}"
 
 
@@ -523,6 +554,7 @@ class riskeycap_2_5U(riskeycap_alphas):
     """
     The base for all 2.5U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -534,7 +566,7 @@ class riskeycap_2_5U(riskeycap_alphas):
         self.trans[0] = [3.1, 0.2, 0]
         self.font_sizes[0] = 4
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("2.5U_"):
+        if not self.name or not self.name.startswith("2.5U_"):
             self.name = f"2.5U_{self.name}"
 
 
@@ -542,6 +574,7 @@ class riskeycap_2_75U(riskeycap_alphas):
     """
     The base for all 2.75U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -553,7 +586,7 @@ class riskeycap_2_75U(riskeycap_alphas):
         self.trans[0] = [3.1, 0.2, 0]
         self.font_sizes[0] = 4
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("2.75U_"):
+        if not self.name or not self.name.startswith("2.75U_"):
             self.name = f"2.75U_{self.name}"
 
 
@@ -561,6 +594,7 @@ class riskeycap_6_25U(riskeycap_alphas):
     """
     The base for all 6.25U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -572,7 +606,7 @@ class riskeycap_6_25U(riskeycap_alphas):
         self.trans[0] = [3.1, 0.2, 0]
         self.font_sizes[0] = 4
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("6.25U_"):
+        if not self.name or not self.name.startswith("6.25U_"):
             self.name = f"6.25U_{self.name}"
 
 
@@ -580,6 +614,7 @@ class riskeycap_7U(riskeycap_alphas):
     """
     The base for all 7U keycaps.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         kwargs_copy = deepcopy(kwargs)
@@ -591,7 +626,7 @@ class riskeycap_7U(riskeycap_alphas):
         self.trans[0] = [3.1, 0.2, 0]
         self.font_sizes[0] = 4
         self.postinit(**kwargs_copy)
-        if not self.name.startswith("7U_"):
+        if not self.name or not self.name.startswith("7U_"):
             self.name = f"7U_{self.name}"
 
 
@@ -611,7 +646,6 @@ KEYCAPS = [
     riskeycap_numrow(legends=["0", "", ")"]),
     riskeycap_dash(name="dash", legends=["-", "", "_"]),
     riskeycap_equal(name="equal", legends=["=", "", "+"]),
-
     # Alphas
     riskeycap_alphas(legends=["A"]),
     riskeycap_alphas(legends=["B"]),
@@ -642,7 +676,6 @@ KEYCAPS = [
     riskeycap_alphas(legends=["Y"]),
     riskeycap_alphas(legends=["Z"]),
     riskeycap_alphas(legends=["Z"]),
-
     # Function keys
     riskeycap_alphas(legends=["F1"]),
     riskeycap_alphas(legends=["F2"]),
@@ -658,11 +691,11 @@ KEYCAPS = [
     riskeycap_alphas(legends=["F10"], font_sizes=[4.25], trans=[[2.4, 0, 0]]),
     riskeycap_alphas(legends=["F11"], font_sizes=[4.25]),
     riskeycap_alphas(legends=["F12"], font_sizes=[4.25]),
-
     # Bottom row(s) and sides 1U
     riskeycap_alphas(name="menu", legends=["☰"], fonts=["Code2000"]),
-    riskeycap_alphas(name="option1U", legends=["⌥"],
-                     fonts=["JetBrainsMono Nerd Font"], font_sizes=[6]),
+    riskeycap_alphas(
+        name="option1U", legends=["⌥"], fonts=["JetBrainsMono Nerd Font"], font_sizes=[6]
+    ),
     riskeycap_arrows(name="left", legends=["◀", "", ""]),
     riskeycap_arrows(name="right", legends=["▶", "", ""]),
     riskeycap_arrows(name="left_rw", legends=["◀", "", ""]),
@@ -742,23 +775,32 @@ KEYCAPS = [
     riskeycap_1_U_text(legends=["CYA"], scale=[[0.75, 1, 3]]),
     riskeycap_1_U_text(legends=["IDK"], scale=[[0.75, 1, 3]]),
     riskeycap_1_U_text(legends=["ASS"], scale=[[0.75, 1, 3]]),
-    riskeycap_1_U_text(legends=["ANY", "", "KEY"], scale=[[0.75, 1, 3]], fonts=[
+    riskeycap_1_U_text(
+        legends=["ANY", "", "KEY"],
+        scale=[[0.75, 1, 3]],
+        fonts=[
             "Gotham Rounded:style=Bold",
             "Gotham Rounded:style=Bold",
             "Gotham Rounded:style=Bold",
-    ], font_sizes=[4, 4, 4.15]),  # 4.15 here works around a minor slicing issue
+        ],
+        font_sizes=[4, 4, 4.15],
+    ),  # 4.15 here works around a minor slicing issue
     riskeycap_1_U_text(legends=["OK"]),
     riskeycap_1_U_text(legends=["NO"]),
     riskeycap_1_U_text(legends=["Yes"]),
     riskeycap_1_U_text(legends=["DO"]),
-    riskeycap_1_U_2_row_text(name="DO_NOT", legends=["DO", "NOT"],
-                             trans=[[2.7, 2.75, 0], [2.7, -2, 0]], font_sizes=[3.5, 3.5]),
+    riskeycap_1_U_2_row_text(
+        name="DO_NOT",
+        legends=["DO", "NOT"],
+        trans=[[2.7, 2.75, 0], [2.7, -2, 0]],
+        font_sizes=[3.5, 3.5],
+    ),
     riskeycap_1_U_text(legends=["FUBAR"], font_sizes=[3.25], scale=[[0.55, 1, 3]]),
     riskeycap_1_U_text(legends=["Home"], font_sizes=[2.75]),
-    riskeycap_1_U_2_row_text(name="PageUp",
-                             legends=["Page", "Up"], font_sizes=[2.75, 2.75]),
-    riskeycap_1_U_2_row_text(name="PageDown",
-                             legends=["Page", "Down"], font_sizes=[2.75, 2.75]),
+    riskeycap_1_U_2_row_text(name="PageUp", legends=["Page", "Up"], font_sizes=[2.75, 2.75]),
+    riskeycap_1_U_2_row_text(
+        name="PageDown", legends=["Page", "Down"], font_sizes=[2.75, 2.75]
+    ),
     riskeycap_1_U_text(legends=["Pause"], font_sizes=[2.5]),
     riskeycap_1_U_2_row_text(name="ScrollLock", legends=["Scroll", "Lock"]),
     riskeycap_1_U_text(legends=["Sup"]),
@@ -769,7 +811,6 @@ KEYCAPS = [
     riskeycap_gt_lt(name="comma", legends=[",", "", "<"]),
     riskeycap_gt_lt(name="dot", legends=[".", "", ">"]),
     riskeycap_double_legends(name="slash", legends=["/", "", "?"]),
-
     # 60% and smaller numrow (with function key legends on the front)
     riskeycap_numrow(name="1_F1", legends=["1", "", "!", "F1"]),
     riskeycap_2(name="2_F2", legends=["2", "", "@", "F2"]),
@@ -783,7 +824,6 @@ KEYCAPS = [
     riskeycap_numrow(name="0_F10", legends=["0", "", ")", "F10"]),
     riskeycap_dash(name="dash_F11", legends=["-", "", "_", "F11"]),
     riskeycap_equal(name="equal_F12", legends=["=", "", "+", "F12"]),
-
     # 1.25U keys
     riskeycap_1_25U(name="blank"),
     riskeycap_1_25U(name="LCtrl", legends=["Ctrl"], font_sizes=[4]),
@@ -796,12 +836,19 @@ KEYCAPS = [
     ),
     riskeycap_1_25U(name="Option", legends=["Option"], font_sizes=[2.9]),
     riskeycap_1_25U(name="Fun", legends=["Fun"], font_sizes=[4]),
-    riskeycap_1_25U(name="MoreFun", legends=["More", "Fun"], trans=[[3, 2.5, 0], [3, -2.5, 0]],
-                    font_sizes=[4, 4], scale=[[1, 1, 3], [1, 1, 3]]),
-    riskeycap_1_25U(legends=["Super", "Duper"],
-                    trans=[[3, 2.25, 0], [3, -2.25, 0]], font_sizes=[3.25, 3.25],
-                    scale=[[1, 1, 3], [1, 1, 3]]),
-
+    riskeycap_1_25U(
+        name="MoreFun",
+        legends=["More", "Fun"],
+        trans=[[3, 2.5, 0], [3, -2.5, 0]],
+        font_sizes=[4, 4],
+        scale=[[1, 1, 3], [1, 1, 3]],
+    ),
+    riskeycap_1_25U(
+        legends=["Super", "Duper"],
+        trans=[[3, 2.25, 0], [3, -2.25, 0]],
+        font_sizes=[3.25, 3.25],
+        scale=[[1, 1, 3], [1, 1, 3]],
+    ),
     # 1.5U keys
     riskeycap_1_5U(name="blank"),
     riskeycap_bslash_1U(name="bslash", legends=["\\u005c", "", "|"]),
@@ -810,73 +857,65 @@ KEYCAPS = [
     riskeycap_1_5U(name="Ctrl", legends=["Ctrl"], font_sizes=[4]),
     riskeycap_1_5U(name="LAlt", legends=["Alt"], font_sizes=[4]),
     riskeycap_1_5U(name="RAlt", legends=["Alt Gr"], font_sizes=[4]),
-
     # 1.75U keys
     riskeycap_1_75U(name="blank"),
-    riskeycap_1_75U(legends=["Compose"],
-                    trans=[[3.1, 0.2, 0]], font_sizes=[3.25]),
-    riskeycap_1_75U(name="Caps",
-                    legends=["Caps Lock"], trans=[[3.1, 0, 0]], font_sizes=[3]),
-    riskeycap_1_75U(name="Laps",
-                    legends=["Laps", "Cock"], trans=[[3, 2.5, 0], [3, -2.5, 0]],
-                    font_sizes=[4, 4], scale=[[1, 1, 3], [1, 1, 3]]),
-    riskeycap_1_75U(name="RubOut",
-                    legends=["Rub Out"], trans=[[3.1, 0, 0]], font_sizes=[3]),
-    riskeycap_1_75U(name="Rub1Out",
-                    legends=["Rub 1 Out"], trans=[[3.1, 0, 0]], font_sizes=[3]),
-    riskeycap_1_75U(legends=["Chyros"],
-                    trans=[[3.1, 0, 0]], font_sizes=[4.35]),
-
+    riskeycap_1_75U(legends=["Compose"], trans=[[3.1, 0.2, 0]], font_sizes=[3.25]),
+    riskeycap_1_75U(name="Caps", legends=["Caps Lock"], trans=[[3.1, 0, 0]], font_sizes=[3]),
+    riskeycap_1_75U(
+        name="Laps",
+        legends=["Laps", "Cock"],
+        trans=[[3, 2.5, 0], [3, -2.5, 0]],
+        font_sizes=[4, 4],
+        scale=[[1, 1, 3], [1, 1, 3]],
+    ),
+    riskeycap_1_75U(name="RubOut", legends=["Rub Out"], trans=[[3.1, 0, 0]], font_sizes=[3]),
+    riskeycap_1_75U(name="Rub1Out", legends=["Rub 1 Out"], trans=[[3.1, 0, 0]], font_sizes=[3]),
+    riskeycap_1_75U(legends=["Chyros"], trans=[[3.1, 0, 0]], font_sizes=[4.35]),
     # 2U keys
     riskeycap_2U(name="blank"),
-    riskeycap_2U(name="TOTALBS",
-                 legends=["TOTAL BS"], font_sizes=[3.75, 3.75]),
+    riskeycap_2U(name="TOTALBS", legends=["TOTAL BS"], font_sizes=[3.75, 3.75]),
     riskeycap_2U(name="Backspace", font_sizes=[3.75, 3.75]),
-    riskeycap_2U(name="Rub Out",
-                 legends=["Rub Out"], font_sizes=[4, 4]),
-    riskeycap_2U(name="Rub 1 Out",
-                 legends=["Rub 1 Out"], font_sizes=[3.75, 3.75]),
-    riskeycap_2U(name="2U_space",
-                 # Spacebars don't need to be as thick
-                 stem_sides_wall_thickness=0.0, dish_invert=True),
-
+    riskeycap_2U(name="Rub Out", legends=["Rub Out"], font_sizes=[4, 4]),
+    riskeycap_2U(name="Rub 1 Out", legends=["Rub 1 Out"], font_sizes=[3.75, 3.75]),
+    riskeycap_2U(
+        name="2U_space",
+        # Spacebars don't need to be as thick
+        stem_sides_wall_thickness=0.0,
+        dish_invert=True,
+    ),
     # 2.25U keys
     riskeycap_2_25U(name="blank"),
     riskeycap_2_25U(name="Shift", legends=["Shift"]),
-    riskeycap_2_25U(name="ShiftyShift",
-                    legends=["Shift"], trans=[[9.5, -2.8, 0]]),
-    riskeycap_2_25U(name="ShiftyShiftL",
-                    legends=["Shift"], trans=[[-4, -2.8, 0]]),
+    riskeycap_2_25U(name="ShiftyShift", legends=["Shift"], trans=[[9.5, -2.8, 0]]),
+    riskeycap_2_25U(name="ShiftyShiftL", legends=["Shift"], trans=[[-4, -2.8, 0]]),
     riskeycap_2_25U(name="TrueShift", legends=["True Shift"]),
     riskeycap_2_25U(legends=["Return"]),
     riskeycap_2_25U(legends=["Enter"]),
-
     # 2.5U keys
     riskeycap_2_5U(name="blank"),
     riskeycap_2_5U(name="Shift", legends=["Shift"]),
-    riskeycap_2_5U(name="ShiftyShift",
-                   legends=["Shift"], trans=[[12, -2.8, 0]]),
-    riskeycap_2_5U(name="ShiftyShiftL",
-                   legends=["Shift"], trans=[[-6.5, -2.8, 0]]),
+    riskeycap_2_5U(name="ShiftyShift", legends=["Shift"], trans=[[12, -2.8, 0]]),
+    riskeycap_2_5U(name="ShiftyShiftL", legends=["Shift"], trans=[[-6.5, -2.8, 0]]),
     riskeycap_2_5U(name="TrueShift", legends=["True Shift"]),
-
     # 2.75U keys
     riskeycap_2_75U(name="blank"),
     riskeycap_2_75U(name="Shift", legends=["Shift"]),
-    riskeycap_2_75U(name="ShiftyShift",
-                    legends=["Shift"], trans=[[14, -2.8, 0]]),
-    riskeycap_2_75U(name="ShiftyShiftL",
-                    legends=["Shift"], trans=[[-8.5, -2.8, 0]]),
+    riskeycap_2_75U(name="ShiftyShift", legends=["Shift"], trans=[[14, -2.8, 0]]),
+    riskeycap_2_75U(name="ShiftyShiftL", legends=["Shift"], trans=[[-8.5, -2.8, 0]]),
     riskeycap_2_75U(name="TrueShift", legends=["True Shift"]),
-
     # Various spacebars
-    riskeycap_6_25U(name="space",
-                    # Spacebars don't need to be as thick
-                    stem_sides_wall_thickness=0.0, dish_invert=True),
-    riskeycap_7U(name="space",
-                 # Spacebars don't need to be as thick
-                 stem_sides_wall_thickness=0.0, dish_invert=True),
-
+    riskeycap_6_25U(
+        name="space",
+        # Spacebars don't need to be as thick
+        stem_sides_wall_thickness=0.0,
+        dish_invert=True,
+    ),
+    riskeycap_7U(
+        name="space",
+        # Spacebars don't need to be as thick
+        stem_sides_wall_thickness=0.0,
+        dish_invert=True,
+    ),
     # Numpad keycaps
     riskeycap_alphas(name="numpad1", legends=["1"]),
     riskeycap_alphas(name="numpad2", legends=["2"]),
@@ -889,18 +928,28 @@ KEYCAPS = [
     riskeycap_alphas(name="numpad9", legends=["9"]),
     riskeycap_alphas(name="numpad0", legends=["0"]),
     riskeycap_alphas(name="numpadplus", legends=["+"], font_sizes=[6]),
-    riskeycap_2UV(name="2UV_numpadplus", legends=["+"], font_sizes=[6],
-                  trans=[[0.5, -0.1, 0]]),
-    riskeycap_2UV(name="2UV_numpadenter", legends=["↵"],
-                  fonts=["OverpassMono Nerd Font:style=Bold"], font_sizes=[7]),
-    riskeycap_2U(name="2U_numpad0", legends=["0"],
-                 font_sizes=[4.5]),
+    riskeycap_2UV(name="2UV_numpadplus", legends=["+"], font_sizes=[6], trans=[[0.5, -0.1, 0]]),
+    riskeycap_2UV(
+        name="2UV_numpadenter",
+        legends=["↵"],
+        fonts=["OverpassMono Nerd Font:style=Bold"],
+        font_sizes=[7],
+    ),
+    riskeycap_2U(name="2U_numpad0", legends=["0"], font_sizes=[4.5]),
     riskeycap_alphas(name="numpaddot", legends=["."], font_sizes=[6]),
-    riskeycap_alphas(name="numlock", legends=["Num"], font_sizes=[3.25],),
+    riskeycap_alphas(
+        name="numlock",
+        legends=["Num"],
+        font_sizes=[3.25],
+    ),
     riskeycap_alphas(name="numpadslash", legends=["/"]),
     riskeycap_alphas(name="numpadstar", legends=["*"], font_sizes=[8.5]),
-
     # Default width of - is a bit too skinny so we scale/adjust it a bit:
-    riskeycap_alphas(name="numpadminus", legends=["-"],
-                     font_sizes=[6], scale=[[1.4, 1, 3]], trans=[[2.9, 0, 0]]),
+    riskeycap_alphas(
+        name="numpadminus",
+        legends=["-"],
+        font_sizes=[6],
+        scale=[[1.4, 1, 3]],
+        trans=[[2.9, 0, 0]],
+    ),
 ]

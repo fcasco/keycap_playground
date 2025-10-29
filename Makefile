@@ -5,7 +5,7 @@ check-python:
 	ruff check src/*.py
 
 check-types:
-	uv run ty check src/*.py
+	uv run ty check src
 
 check-scad:
 	uv run sca2d .

@@ -3,7 +3,6 @@
 out = "."
 file-type = "stl"
 legends = true
-force = false
 max-processes = 2
 log-level = "INFO"
 log-file = "/tmp/keyplay.log"

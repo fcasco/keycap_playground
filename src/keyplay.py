@@ -161,7 +161,7 @@ def process_specific_keycaps(args: Namespace) -> list[str]:
     for name in args.names:
         name_found = False
         for keycap in KEYCAPS:
-            if keycap.name.lower() == name.lower():
+            if keycap.name and keycap.name.lower() == name.lower():
                 name_found = True
                 new_command = make_keycap_command(keycap, args.out, args.file_type, args.force)
                 if new_command:

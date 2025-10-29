@@ -62,3 +62,6 @@ quote-style = "double"
 extend-select = ["E302"]
 preview = true
 select = ["A", "B", "C", "E", "F", "Q", "W", "I", "UP", "PGH", "RUF", "FLY"]
+
+[tool.ty.environment]
+root = ["./"]
