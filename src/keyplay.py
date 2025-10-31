@@ -206,7 +206,12 @@ def make_commands(args: Namespace) -> list[str]:
 
 
 def run(args: Namespace) -> None:
+    output_path = Path(args.out)
     logger.info(f"Outputting to: {args.out}")
+
+    if not output_path.exists():
+        logger.error(f"Output directory '{args.out}' does not exist")
+        return
 
     commands = make_commands(args)
     semaphore = asyncio.Semaphore(args.max_processes)

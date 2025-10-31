@@ -1,0 +1,7 @@
+# KeyPlay config for numbers keycap
+
+file-type = "stl"
+legends = true
+max-processes = 4
+names = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+out = "keycaps/numbers"
